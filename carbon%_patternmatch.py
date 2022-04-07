@@ -42,18 +42,18 @@ itr = 5  # Iterations for morph operation
 action_list = ["dilate", 'erode', 'morph', 'none']
 Action = action_list[1]
 showcolor = True
-img_show = False  # Show image
+img_show = True  # Show image
 write_file = False  # Write files with ROI
 templateROI = np.index_exp[288:801, 345:1688]
 
 
-def numcal(x, y):
-    n = x - y
-    if n <= 0:
-        n = 0
-        return n
-    else:
-        return n
+# def numcal(x, y):
+#     n = x - y
+#     if n <= 0:
+#         n = 0
+#         return n
+#     else:
+#         return n
 
 
 # Rotate Image
@@ -92,50 +92,34 @@ for (dirpath, dirnames, filenames) in os.walk(source_folder):
         print('Index Error for .DS_store')
         pass
 
-    for i in listOfFiles:
-        # print(i)
-        if k != 81:
-            try:
-                # print('opening file:', i)
-                # file_name = os.path.join(source_folder, i)
-                # totalcount += 1
-                img1 = cv2.imread(i, cv2.IMREAD_UNCHANGED)
-                # cv2.imshow(f'{i}', img1)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
-                img_copy = img1.copy()
-                for rot in rotateList:
-                    # Rotate the image & add border. Border is required to preserve image data during rotation.
-                    imgrotated_bw = Rotate_Image(img_copy, rot)
-                    result = cv2.matchTemplate(imgrotated_bw, reference_template, cv2.TM_CCOEFF_NORMED)
-                    # print('Rotate Iteration:', rot)
-                    ittercount += 1
-                    # print(f'Result:{result.max()}')
+for i in listOfFiles:
+    print(i)
+    if k != 81:
+        try:
+            img1 = cv2.imread(i, cv2.IMREAD_UNCHANGED)
+            img_copy = img1.copy()
+            for rot in rotateList:
+                # Rotate the image & add border. Border is required to preserve image data during rotation.
+                imgrotated_bw = Rotate_Image(img_copy, rot)
+                result = cv2.matchTemplate(imgrotated_bw, reference_template, cv2.TM_CCOEFF_NORMED)
+                ittercount += 1
                 if (result.max() >= matchThresh).any():
                     if rot != 0:
                         adjustlist.append(i.split("/")[-1] + str(rot))
                     print(f'Result:{result.max()} --> file:{i}')
-
-                    # goodcount += 1
-                    # ittercount = 0
-
                     # Show image ROI's - Warning, this has a memory leak, only use to verify a sample of images
                     # but dont let it run during data collection
                     try:
                         loc = np.where(result == result.max())
                         loc_list = [i for i in zip(*loc)]
-
                         if img_show:
                             # Convert the Black and white search ROI into color
                             img_color_srch = cv2.cvtColor(imgrotated_bw, cv2.COLOR_BGR2RGB)
-                            # cv2.rectangle(img_color_srch,
-                            #               (loc_list[0][1], loc_list[0][0]),
-                            #               (loc_list[0][1] + (templateROI[1].stop - templateROI[1].stop),
-                            #                (loc_list[0][0] + (templateROI[0].stop - templateROI[0].start))),
-                            #               (0, 255, 255), thickness=2, lineType=cv2.LINE_4)
                             cv2.rectangle(img_color_srch,
-                                          (loc_list[0][1], loc_list[0][0]), (loc_list[0][1] + 10), (loc_list[0][0] + 10),
-                                          (0, 0, 255), thickness=2, lineType=cv2.LINE_4)
+                                          (loc_list[0][1], loc_list[0][0]),
+                                          (loc_list[0][1] + (templateROI[1].stop - templateROI[1].start),
+                                           (loc_list[0][0] + (templateROI[0].stop - templateROI[0].start))),
+                                          (255, 0, 255), thickness=3, lineType=cv2.LINE_4)
                             # Rotate the color ROI back into the original postision
                             colorImageRotateBack = Rotate_Image(img_color_srch, -rot)
                             # Delete the border
@@ -147,15 +131,11 @@ for (dirpath, dirnames, filenames) in os.walk(source_folder):
                             # break
                     except Exception as e:
                         print(f'error 111: {e}')
+                break
 
-                    # if ittercount == rotateList.shape[0] and (result < matchThresh).any():
-                    #     print(f'No Pattern Found:{i.split("/")[-1]}')
-                    #     failedlist.append(i)
-                    #     ittercount = 0
-
-            except Exception as e:
-                print('Error 001:', e)
-                totalcount -= 1
-        else:
-            cv2.destroyAllWindows()
-            break
+        except Exception as e:
+            print('Error 001:', e)
+            totalcount -= 1
+    else:
+        cv2.destroyAllWindows()
+        break
