@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import os
 import re
 
-folder = '/Users/justinclay/Downloads/CSA with different Carbon content'
+folder = '/Users/justinclay/CarbonContent/CSA with different Carbon content'
 listOfFiles = []
 
 
@@ -30,6 +30,10 @@ def main():
     file_list = filelist(folder)
     for i in file_list:
         print(i)
+        im = cv2.imread(i, cv2.IMREAD_UNCHANGED)
+        cv2.imshow('Collector', im)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
