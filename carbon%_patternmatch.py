@@ -29,7 +29,7 @@ reference_template = cv2.imread(template_path, 0)
 matchThresh = 0.80
 k = 0
 rotateList = np.array([0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5], dtype=float)  # values (degrees)
-border = 0
+border = 10
 totalcount = 0
 currentcount = 0
 goodcount = 0
@@ -45,16 +45,6 @@ showcolor = True
 img_show = True  # Show image
 write_file = False  # Write files with ROI
 templateROI = np.index_exp[288:801, 345:1688]
-
-
-# def numcal(x, y):
-#     n = x - y
-#     if n <= 0:
-#         n = 0
-#         return n
-#     else:
-#         return n
-
 
 # Rotate Image
 def Rotate_Image(template, rotation=float):
