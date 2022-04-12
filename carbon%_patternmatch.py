@@ -11,54 +11,51 @@ Pattern matcher, uses a rotation list and search area to find pattern.
 3 - Once the template has been located, draw shapes and re-stich search area back into original image
 """
 import re
-import shutil
-
 import cv2
-import matplotlib.pyplot as plt
-import numpy
 import numpy as np
 import os
-import gc
-import time
 
 template_path = '/Users/justinclay/PycharmProjects/CarbonContent/ReferenceImages/template.bmp'
 source_folder = '/Users/justinclay/PycharmProjects/CarbonContent/CSA with different Carbon content'
+# source_folder = '/Users/justinclay/PycharmProjects/CarbonContent/CSA with different Carbon content/test'
 reference_template = cv2.imread(template_path, 0)
 
 # Variables
 matchThresh = 0.80
 k = 0
 rotateList = np.array([0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5], dtype=float)  # values (degrees)
-border = 10
-# totalcount = 0
-# currentcount = 0
-# goodcount = 0
-# ittercount = 0
-# listOfFiles = []
-# failedlist = []
-# adjustlist = []
-# searchArea = np.index_exp[625:1370, 954:1811]
-# itr = 5  # Iterations for morph operation
-# Action = action_list[1]
-# showcolor = True
+totalcount = 0
+border = 0
+ittercount = 0
+rot = None
+paddedIm = None
+adjustlist = []
 img_show = True  # Show image
 write_file = False  # Write files with ROI
-templateROI = np.index_exp[288:801, 345:1688]
+ROI1_x1 = \
+    ROI1_y1 = \
+    ROI1_x2 = \
+    ROI1_y2 = \
+    ROI2_x1 = \
+    ROI2_y1 = \
+    ROI2_x2 = \
+    ROI2_y2 = \
+    orginx = \
+    orginy = \
+    None
 
-ROI3 = np.index_exp[401:668, 1563:1619]
-ROI6 = np.index_exp[456:676, 420:483]
 ROI1 = np.index_exp[312:348, 695:868]
 ROI2 = np.index_exp[308:339, 1169:1328]
-ROI5 = np.index_exp[768:808, 699:857]
+ROI3 = np.index_exp[401:668, 1563:1619]
 ROI4 = np.index_exp[775:806, 1176:1343]
-
-
+ROI5 = np.index_exp[768:808, 699:857]
+ROI6 = np.index_exp[456:676, 420:483]
+templateROI = np.index_exp[288:801, 345:1688]
 
 
 # Rotate Image
 def Rotate_Image(template, rotation=float):
     global paddedIm, border
-    # border = int((min(template.shape[0], template.shape[1])) / 50)
     border = 50
     paddedIm = np.zeros((template.shape[0] + border * 2, template.shape[1] + border * 2))
     paddedIm = cv2.copyMakeBorder(template, border, border, border, border, cv2.BORDER_CONSTANT, value=0)
@@ -78,6 +75,7 @@ def Rotate_Image(template, rotation=float):
 
     return result1
 
+
 def list_files(path):
     lfile = []
     global result
@@ -95,24 +93,33 @@ def list_files(path):
     return lfile
 
 
-# global result
-# for (dirpath, dirnames, filenames) in os.walk(source_folder):
-#     try:
-#         if re.findall(".DS_Store", filenames[0]):
-#             print('.DS Store Found')
-#             pass
-#         else:
-#             listOfFiles += [os.path.join(dirpath, file) for file in filenames]
-#     except IndexError:
-#         print('Index Error for .DS_store')
-#         pass
+def offset(x, y):
+    roi1_x1 = x + (ROI1[1].start - templateROI[1].start)
+    roi1_y1 = y - (templateROI[0].start - ROI1[0].start)
+    roi1_x2 = roi1_x1 + (ROI1[1].stop - ROI1[1].start)
+    roi1_y2 = roi1_y1 + (ROI1[0].stop - ROI1[0].start)
+
+    roi2_x1 = x + (ROI2[1].start - templateROI[1].start)
+    roi2_y1 = y - (templateROI[0].start - ROI2[0].start)
+    roi2_x2 = roi2_x1 + (ROI2[1].stop - ROI2[1].start)
+    roi2_y2 = roi2_y1 + (ROI2[0].stop - ROI2[0].start)
+
+    return roi1_x1, \
+           roi1_y1, \
+           roi1_x2, \
+           roi1_y2, \
+           roi2_x1, \
+           roi2_y1, \
+           roi2_x2, \
+           roi2_y2
+
 
 listOfFiles = list_files(source_folder)
 for i in listOfFiles:
     print(i)
     if k != 81:
         try:
-            img1 = cv2.imread(i, cv2.IMREAD_UNCHANGED)
+            img1 = cv2.imread(i, cv2.IMREAD_GRAYSCALE)
             img_copy = img1.copy()
             for rot in rotateList:
                 # Rotate the image & add border. Border is required to preserve image data during rotation.
@@ -128,19 +135,44 @@ for i in listOfFiles:
                     try:
                         loc = np.where(result == result.max())
                         loc_list = [i for i in zip(*loc)]
+                        orginx = loc_list[0][1]
+                        orginy = loc_list[0][0]
                         if img_show:
+                            ROI1_x1, \
+                            ROI1_y1, \
+                            ROI1_x2, \
+                            ROI1_y2, \
+                            ROI2_x1, \
+                            ROI2_y1, \
+                            ROI2_x2, \
+                            ROI2_y2 = offset(orginx, orginy)
                             # Convert the Black and white search ROI into color
                             img_color_srch = cv2.cvtColor(imgrotated_bw, cv2.COLOR_BGR2RGB)
                             cv2.rectangle(img_color_srch,
-                                          (loc_list[0][1], loc_list[0][0]),
-                                          (loc_list[0][1] + (templateROI[1].stop - templateROI[1].start),
-                                           (loc_list[0][0] + (templateROI[0].stop - templateROI[0].start))),
+                                          (orginx, orginy),
+                                          (orginx + (templateROI[1].stop - templateROI[1].start),
+                                           (orginy + (templateROI[0].stop - templateROI[0].start))),
                                           (255, 0, 255), thickness=3, lineType=cv2.LINE_4)
+                            cv2.rectangle(img_color_srch,
+                                          (ROI1_x1, ROI1_y1),
+                                          (ROI1_x2, ROI1_y2),
+                                          (255, 0, 255),
+                                          thickness=3,
+                                          lineType=cv2.LINE_4
+                                          )
+                            cv2.rectangle(img_color_srch,
+                                          (ROI2_x1, ROI2_y1),
+                                          (ROI2_x2, ROI2_y2),
+                                          (255, 0, 255),
+                                          thickness=3,
+                                          lineType=cv2.LINE_4
+                                          )
                             # Rotate the color ROI back into the original postision
                             colorImageRotateBack = Rotate_Image(img_color_srch, -rot)
                             # Delete the border
                             crop_color = colorImageRotateBack[2 * border:colorImageRotateBack.shape[0] - 2 * border,
                                          2 * border:colorImageRotateBack.shape[1] - 2 * border]
+                            print('delta', orginy - ROI1_y1)
                             cv2.imshow('PatternFind', crop_color)
                             cv2.waitKey(0)
                             cv2.destroyAllWindows()
@@ -155,3 +187,6 @@ for i in listOfFiles:
     else:
         cv2.destroyAllWindows()
         break
+
+    # import matplotlib.pylab as plt
+    # plt.imshow(crop_color)
