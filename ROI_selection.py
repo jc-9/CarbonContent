@@ -12,7 +12,7 @@ from pathlib import Path
 top_corner = []
 bottom_corner = []
 
-file = '/Users/justinclay/CarbonContent/CSA with different Carbon content/PMC 0.6/M3_Cam_4_NG_2022-03-28_11-29-27-6203.jfz/Input0_Camera0.jpg'
+file = '/Users/justinclay/PycharmProjects/CarbonContent/CSA with different Carbon content/PMC 0.6/M3_Cam_4_NG_2022-03-28_11-29-27-6203.jfz/Input0_Camera0.jpg'
 
 
 def drawSquare(action, x, y, flags, userdata):

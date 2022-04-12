@@ -21,8 +21,8 @@ import os
 import gc
 import time
 
-template_path = '/Users/justinclay/CarbonContent/ReferenceImages/template.bmp'
-source_folder = '/Users/justinclay/CarbonContent/CSA with different Carbon content'
+template_path = '/Users/justinclay/PycharmProjects/CarbonContent/ReferenceImages/template.bmp'
+source_folder = '/Users/justinclay/PycharmProjects/CarbonContent/CSA with different Carbon content'
 reference_template = cv2.imread(template_path, 0)
 
 # Variables
@@ -30,21 +30,30 @@ matchThresh = 0.80
 k = 0
 rotateList = np.array([0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5], dtype=float)  # values (degrees)
 border = 10
-totalcount = 0
-currentcount = 0
-goodcount = 0
-ittercount = 0
-listOfFiles = []
-failedlist = []
-adjustlist = []
-searchArea = np.index_exp[625:1370, 954:1811]
-itr = 5  # Iterations for morph operation
-action_list = ["dilate", 'erode', 'morph', 'none']
-Action = action_list[1]
-showcolor = True
+# totalcount = 0
+# currentcount = 0
+# goodcount = 0
+# ittercount = 0
+# listOfFiles = []
+# failedlist = []
+# adjustlist = []
+# searchArea = np.index_exp[625:1370, 954:1811]
+# itr = 5  # Iterations for morph operation
+# Action = action_list[1]
+# showcolor = True
 img_show = True  # Show image
 write_file = False  # Write files with ROI
 templateROI = np.index_exp[288:801, 345:1688]
+
+ROI3 = np.index_exp[401:668, 1563:1619]
+ROI6 = np.index_exp[456:676, 420:483]
+ROI1 = np.index_exp[312:348, 695:868]
+ROI2 = np.index_exp[308:339, 1169:1328]
+ROI5 = np.index_exp[768:808, 699:857]
+ROI4 = np.index_exp[775:806, 1176:1343]
+
+
+
 
 # Rotate Image
 def Rotate_Image(template, rotation=float):
@@ -69,19 +78,36 @@ def Rotate_Image(template, rotation=float):
 
     return result1
 
+def list_files(path):
+    lfile = []
+    global result
 
-global result
-for (dirpath, dirnames, filenames) in os.walk(source_folder):
-    try:
-        if re.findall(".DS_Store", filenames[0]):
-            print('.DS Store Found')
+    for (dirpath, dirnames, filenames) in os.walk(path):
+        try:
+            if re.findall(".DS_Store", filenames[0]):
+                print('.DS Store Found')
+                pass
+            else:
+                lfile += [os.path.join(dirpath, file) for file in filenames]
+        except IndexError:
+            print('Index Error for .DS_store')
             pass
-        else:
-            listOfFiles += [os.path.join(dirpath, file) for file in filenames]
-    except IndexError:
-        print('Index Error for .DS_store')
-        pass
+    return lfile
 
+
+# global result
+# for (dirpath, dirnames, filenames) in os.walk(source_folder):
+#     try:
+#         if re.findall(".DS_Store", filenames[0]):
+#             print('.DS Store Found')
+#             pass
+#         else:
+#             listOfFiles += [os.path.join(dirpath, file) for file in filenames]
+#     except IndexError:
+#         print('Index Error for .DS_store')
+#         pass
+
+listOfFiles = list_files(source_folder)
 for i in listOfFiles:
     print(i)
     if k != 81:
