@@ -114,71 +114,99 @@ def offset(x, y):
            roi2_y2
 
 
+def find_pattern(image_path):
+    try:
+        img1 = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        img_copy = img1.copy()
+
+        for rot in rotateList:
+            imgrotated_bw = Rotate_Image(img_copy, rot)
+            result = cv2.matchTemplate(imgrotated_bw, reference_template, cv2.TM_CCOEFF_NORMED)
+
+            if (result.max() >= matchThresh).any():
+                if rot != 0:
+                    adjustlist.append(image_path.split("/")[-1] + str(rot))
+                print(f'Result:{result.max()} --> file:{image_path}')
+                loc = np.where(result == result.max())
+                loc_list = [i for i in zip(*loc)]
+                orginx = loc_list[0][1]
+                orginy = loc_list[0][0]
+                ImageRotateBack = Rotate_Image(img1, -rot)
+                break
+    except Exception as E:
+        print(f"Exception for function find_pattern:{E}")
+        return orginx,orginy
+
+def point_rotation (rotate_angle,x1,y1):
+
+
+
 listOfFiles = list_files(source_folder)
 for i in listOfFiles:
     print(i)
     if k != 81:
-        try:
-            img1 = cv2.imread(i, cv2.IMREAD_GRAYSCALE)
-            img_copy = img1.copy()
-            for rot in rotateList:
-                # Rotate the image & add border. Border is required to preserve image data during rotation.
-                imgrotated_bw = Rotate_Image(img_copy, rot)
-                result = cv2.matchTemplate(imgrotated_bw, reference_template, cv2.TM_CCOEFF_NORMED)
-                ittercount += 1
-                if (result.max() >= matchThresh).any():
-                    if rot != 0:
-                        adjustlist.append(i.split("/")[-1] + str(rot))
-                    print(f'Result:{result.max()} --> file:{i}')
-                    # Show image ROI's - Warning, this has a memory leak, only use to verify a sample of images
-                    # but dont let it run during data collection
-                    try:
-                        loc = np.where(result == result.max())
-                        loc_list = [i for i in zip(*loc)]
-                        orginx = loc_list[0][1]
-                        orginy = loc_list[0][0]
-                        if img_show:
-                            ROI1_x1, \
-                            ROI1_y1, \
-                            ROI1_x2, \
-                            ROI1_y2, \
-                            ROI2_x1, \
-                            ROI2_y1, \
-                            ROI2_x2, \
-                            ROI2_y2 = offset(orginx, orginy)
-                            # Convert the Black and white search ROI into color
-                            img_color_srch = cv2.cvtColor(imgrotated_bw, cv2.COLOR_BGR2RGB)
-                            cv2.rectangle(img_color_srch,
-                                          (orginx, orginy),
-                                          (orginx + (templateROI[1].stop - templateROI[1].start),
-                                           (orginy + (templateROI[0].stop - templateROI[0].start))),
-                                          (255, 0, 255), thickness=3, lineType=cv2.LINE_4)
-                            cv2.rectangle(img_color_srch,
-                                          (ROI1_x1, ROI1_y1),
-                                          (ROI1_x2, ROI1_y2),
-                                          (255, 0, 255),
-                                          thickness=3,
-                                          lineType=cv2.LINE_4
-                                          )
-                            cv2.rectangle(img_color_srch,
-                                          (ROI2_x1, ROI2_y1),
-                                          (ROI2_x2, ROI2_y2),
-                                          (255, 0, 255),
-                                          thickness=3,
-                                          lineType=cv2.LINE_4
-                                          )
-                            # Rotate the color ROI back into the original postision
-                            colorImageRotateBack = Rotate_Image(img_color_srch, -rot)
-                            # Delete the border
-                            crop_color = colorImageRotateBack[2 * border:colorImageRotateBack.shape[0] - 2 * border,
-                                         2 * border:colorImageRotateBack.shape[1] - 2 * border]
-                            print('delta', orginy - ROI1_y1)
-                            cv2.imshow('PatternFind', crop_color)
-                            cv2.waitKey(0)
-                            cv2.destroyAllWindows()
-                            # break
-                    except Exception as e:
-                        print(f'error 111: {e}')
+        # try:
+        #     img1 = cv2.imread(i, cv2.IMREAD_GRAYSCALE)
+        #     img_copy = img1.copy()
+        #     for rot in rotateList:
+        #         # Rotate the image & add border. Border is required to preserve image data during rotation.
+        #         imgrotated_bw = Rotate_Image(img_copy, rot)
+        #         result = cv2.matchTemplate(imgrotated_bw, reference_template, cv2.TM_CCOEFF_NORMED)
+        #         # ittercount += 1
+        #         if (result.max() >= matchThresh).any():
+        #             if rot != 0:
+        #                 adjustlist.append(i.split("/")[-1] + str(rot))
+        #             print(f'Result:{result.max()} --> file:{i}')
+        #             # Show image ROI's - Warning, this has a memory leak, only use to verify a sample of images
+        #             # but dont let it run during data collection
+        #             try:
+        #                 loc = np.where(result == result.max())
+        #                 loc_list = [i for i in zip(*loc)]
+        #                 orginx = loc_list[0][1]
+        #                 orginy = loc_list[0][0]
+        orginx, orginy = find_pattern(i)
+        if img_show:
+            ROI1_x1, \
+            ROI1_y1, \
+            ROI1_x2, \
+            ROI1_y2, \
+            ROI2_x1, \
+            ROI2_y1, \
+            ROI2_x2, \
+            ROI2_y2 = offset(orginx, orginy)
+            # Convert the Black
+            img_color_srch = cv2.cvtColor(imgrotated_bw, cv2.COLOR_BGR2RGB)
+            cv2.rectangle(img_color_srch,
+                          (orginx, orginy),
+                          (orginx + (templateROI[1].stop - templateROI[1].start),
+                           (orginy + (templateROI[0].stop - templateROI[0].start))),
+                          (255, 0, 255), thickness=3, lineType=cv2.LINE_4)
+            cv2.rectangle(img_color_srch,
+                          (ROI1_x1, ROI1_y1),
+                          (ROI1_x2, ROI1_y2),
+                          (255, 0, 255),
+                          thickness=3,
+                          lineType=cv2.LINE_4
+                          )
+            cv2.rectangle(img_color_srch,
+                          (ROI2_x1, ROI2_y1),
+                          (ROI2_x2, ROI2_y2),
+                          (255, 0, 255),
+                          thickness=3,
+                          lineType=cv2.LINE_4
+                          )
+            # Rotate the color ROI back into the original postision
+            colorImageRotateBack = Rotate_Image(img_color_srch, -rot)
+            # Delete the border
+            crop_color = colorImageRotateBack[2 * border:colorImageRotateBack.shape[0] - 2 * border,
+                         2 * border:colorImageRotateBack.shape[1] - 2 * border]
+            print('delta', orginy - ROI1_y1)
+            cv2.imshow('PatternFind', crop_color)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            # break
+        # except Exception as e:
+        #     print(f'error 111: {e}')
                 break
 
         except Exception as e:
