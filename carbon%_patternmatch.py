@@ -14,6 +14,7 @@ import re
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 template_path = '/Users/justinclay/PycharmProjects/CarbonContent/ReferenceImages/template.bmp'
 source_folder = '/Users/justinclay/PycharmProjects/CarbonContent/CSA with different Carbon content'
@@ -32,6 +33,7 @@ paddedIm = None
 adjustlist = []
 img_show = True  # Show image
 write_file = False  # Write files with ROI
+dict_1 = {"roi1": [], 'roi2': [], 'roi3': [], 'roi4': [], 'roi5': [], 'roi6': []}
 ROI1_x1 = \
     ROI1_y1 = \
     ROI1_x2 = \
@@ -40,6 +42,22 @@ ROI1_x1 = \
     ROI2_y1 = \
     ROI2_x2 = \
     ROI2_y2 = \
+    ROI3_x1 = \
+    ROI3_x2 = \
+    ROI3_y1 = \
+    ROI3_y2 = \
+    ROI4_x1 = \
+    ROI4_x2 = \
+    ROI4_y1 = \
+    ROI4_y2 = \
+    ROI5_x1 = \
+    ROI5_x2 = \
+    ROI5_y1 = \
+    ROI5_y2 = \
+    ROI6_x1 = \
+    ROI6_x2 = \
+    ROI6_y1 = \
+    ROI6_y2 = \
     orginx = \
     orginy = \
     None
@@ -104,6 +122,26 @@ def offset(x, y):
     roi2_x2 = roi2_x1 + (ROI2[1].stop - ROI2[1].start)
     roi2_y2 = roi2_y1 + (ROI2[0].stop - ROI2[0].start)
 
+    roi3_x1 = x + (ROI3[1].start - templateROI[1].start)
+    roi3_y1 = y - (templateROI[0].start - ROI3[0].start)
+    roi3_x2 = roi3_x1 + (ROI3[1].stop - ROI3[1].start)
+    roi3_y2 = roi3_y1 + (ROI3[0].stop - ROI3[0].start)
+
+    roi4_x1 = x + (ROI4[1].start - templateROI[1].start)
+    roi4_y1 = y - (templateROI[0].start - ROI4[0].start)
+    roi4_x2 = roi4_x1 + (ROI4[1].stop - ROI4[1].start)
+    roi4_y2 = roi4_y1 + (ROI4[0].stop - ROI4[0].start)
+
+    roi5_x1 = x + (ROI5[1].start - templateROI[1].start)
+    roi5_y1 = y - (templateROI[0].start - ROI5[0].start)
+    roi5_x2 = roi5_x1 + (ROI5[1].stop - ROI5[1].start)
+    roi5_y2 = roi5_y1 + (ROI5[0].stop - ROI5[0].start)
+
+    roi6_x1 = x + (ROI6[1].start - templateROI[1].start)
+    roi6_y1 = y - (templateROI[0].start - ROI6[0].start)
+    roi6_x2 = roi6_x1 + (ROI6[1].stop - ROI6[1].start)
+    roi6_y2 = roi6_y1 + (ROI6[0].stop - ROI6[0].start)
+
     return roi1_x1, \
            roi1_y1, \
            roi1_x2, \
@@ -111,7 +149,23 @@ def offset(x, y):
            roi2_x1, \
            roi2_y1, \
            roi2_x2, \
-           roi2_y2
+           roi2_y2, \
+           roi3_x1, \
+           roi3_y1, \
+           roi3_x2, \
+           roi3_y2, \
+           roi4_x1, \
+           roi4_y1, \
+           roi4_x2, \
+           roi4_y2, \
+           roi5_x1, \
+           roi5_y1, \
+           roi5_x2, \
+           roi5_y2, \
+           roi6_x1, \
+           roi6_y1, \
+           roi6_x2, \
+           roi6_y2
 
 
 listOfFiles = list_files(source_folder)
@@ -145,7 +199,23 @@ for i in listOfFiles:
                             ROI2_x1, \
                             ROI2_y1, \
                             ROI2_x2, \
-                            ROI2_y2 = offset(orginx, orginy)
+                            ROI2_y2, \
+                            ROI3_x1, \
+                            ROI3_x2, \
+                            ROI3_y1, \
+                            ROI3_y2, \
+                            ROI4_x1, \
+                            ROI4_x2, \
+                            ROI4_y1, \
+                            ROI4_y2, \
+                            ROI5_x1, \
+                            ROI5_x2, \
+                            ROI5_y1, \
+                            ROI5_y2, \
+                            ROI6_x1, \
+                            ROI6_x2, \
+                            ROI6_y1, \
+                            ROI6_y2 = offset(orginx, orginy)
                             # Convert the Black and white search ROI into color
                             img_color_srch = cv2.cvtColor(imgrotated_bw, cv2.COLOR_BGR2RGB)
                             cv2.rectangle(img_color_srch,
@@ -188,5 +258,5 @@ for i in listOfFiles:
         cv2.destroyAllWindows()
         break
 
-    # import matplotlib.pylab as plt
-    # plt.imshow(crop_color)
+fig, axs = plt.subplots(ncols=2, nrows=2, figsize=(5.5, 3.5),
+                        constrained_layout=True)
