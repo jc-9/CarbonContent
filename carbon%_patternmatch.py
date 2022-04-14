@@ -14,6 +14,7 @@ import re
 import cv2
 import numpy as np
 import os
+import math
 
 template_path = '/Users/justinclay/PycharmProjects/CarbonContent/ReferenceImages/template.bmp'
 source_folder = '/Users/justinclay/PycharmProjects/CarbonContent/CSA with different Carbon content'
@@ -32,6 +33,8 @@ paddedIm = None
 adjustlist = []
 img_show = True  # Show image
 write_file = False  # Write files with ROI
+centerX = 0.0
+centerY = 0.0
 ROI1_x1 = \
     ROI1_y1 = \
     ROI1_x2 = \
@@ -55,7 +58,7 @@ templateROI = np.index_exp[288:801, 345:1688]
 
 # Rotate Image
 def Rotate_Image(template, rotation=float):
-    global paddedIm, border
+    global paddedIm, border, centerX , centerY
     border = 50
     paddedIm = np.zeros((template.shape[0] + border * 2, template.shape[1] + border * 2))
     paddedIm = cv2.copyMakeBorder(template, border, border, border, border, cv2.BORDER_CONSTANT, value=0)
@@ -132,13 +135,16 @@ def find_pattern(image_path):
                 orginx = loc_list[0][1]
                 orginy = loc_list[0][0]
                 ImageRotateBack = Rotate_Image(img1, -rot)
+                # Center of ImageRotateBack
+                centerX_1 = ImageRotateBack
                 break
     except Exception as E:
         print(f"Exception for function find_pattern:{E}")
         return orginx,orginy
 
+# Calculate rotational correction factor of pattern position
 def point_rotation (rotate_angle,x1,y1):
-
+    distance_to_center = math.sqrt(2)
 
 
 listOfFiles = list_files(source_folder)
