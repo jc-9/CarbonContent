@@ -3,12 +3,7 @@ Justin Clay
 March 8 2022
 justinmelmarclay@gmail.com
 
-April 7, 2022- modification of the pattern match program modified to fit weld b (top, L, R, bottom)
-
-Pattern matcher, uses a rotation list and search area to find pattern.
-1 - Open image and cut seach area out of the image
-2 - Using search area, attempt template match, if fail then rotate search area image
-3 - Once the template has been located, draw shapes and re-stich search area back into original image
+April 7, 2022- Image analysis to evaluate if the camera image is sensistve enough to detect changes in carbon %
 """
 import re
 import cv2
@@ -31,6 +26,12 @@ ittercount = 0
 rot = None
 paddedIm = None
 adjustlist = []
+hist_roi1 = []
+hist_roi2 = []
+hist_roi3 = []
+hist_roi4 = []
+hist_roi5 = []
+hist_roi6 = []
 img_show = True  # Show image
 write_file = False  # Write files with ROI
 dict_1 = {"roi1": [], 'roi2': [], 'roi3': [], 'roi4': [], 'roi5': [], 'roi6': []}
@@ -184,13 +185,23 @@ for i in listOfFiles:
                     if rot != 0:
                         adjustlist.append(i.split("/")[-1] + str(rot))
                     print(f'Result:{result.max()} --> file:{i}')
-                    # Show image ROI's - Warning, this has a memory leak, only use to verify a sample of images
-                    # but dont let it run during data collection
                     try:
                         loc = np.where(result == result.max())
                         loc_list = [i for i in zip(*loc)]
                         orginx = loc_list[0][1]
                         orginy = loc_list[0][0]
+                        if i.split('/')[0] == 'PMC 0.6':
+                            hist_ROI1 = cv2.calcHist([imgrotated_bw[ROI1]], [0], None, [255], [0, 255])
+                            hist_roi1.append(hist_ROI1)
+                        elif i.split('/')[0] == 'PMC 0.7':
+                            pass
+                        elif i.split('/')[0] == 'PMC 0.8':
+                            pass
+                        elif i.split('/')[0] == 'PMC 0.9':
+                            pass
+                        elif i.split('/')[0] == 'PMC 1.0':
+                            pass
+
                         if img_show:
                             ROI1_x1, \
                             ROI1_y1, \
@@ -201,28 +212,28 @@ for i in listOfFiles:
                             ROI2_x2, \
                             ROI2_y2, \
                             ROI3_x1, \
-                            ROI3_x2, \
                             ROI3_y1, \
+                            ROI3_x2, \
                             ROI3_y2, \
                             ROI4_x1, \
-                            ROI4_x2, \
                             ROI4_y1, \
+                            ROI4_x2, \
                             ROI4_y2, \
                             ROI5_x1, \
-                            ROI5_x2, \
                             ROI5_y1, \
+                            ROI5_x2, \
                             ROI5_y2, \
                             ROI6_x1, \
-                            ROI6_x2, \
                             ROI6_y1, \
+                            ROI6_x2, \
                             ROI6_y2 = offset(orginx, orginy)
                             # Convert the Black and white search ROI into color
                             img_color_srch = cv2.cvtColor(imgrotated_bw, cv2.COLOR_BGR2RGB)
-                            cv2.rectangle(img_color_srch,
-                                          (orginx, orginy),
-                                          (orginx + (templateROI[1].stop - templateROI[1].start),
-                                           (orginy + (templateROI[0].stop - templateROI[0].start))),
-                                          (255, 0, 255), thickness=3, lineType=cv2.LINE_4)
+                            # cv2.rectangle(img_color_srch,
+                            #               (orginx, orginy),
+                            #               (orginx + (templateROI[1].stop - templateROI[1].start),
+                            #                (orginy + (templateROI[0].stop - templateROI[0].start))),
+                            #               (255, 0, 255), thickness=3, lineType=cv2.LINE_4)
                             cv2.rectangle(img_color_srch,
                                           (ROI1_x1, ROI1_y1),
                                           (ROI1_x2, ROI1_y2),
@@ -233,6 +244,34 @@ for i in listOfFiles:
                             cv2.rectangle(img_color_srch,
                                           (ROI2_x1, ROI2_y1),
                                           (ROI2_x2, ROI2_y2),
+                                          (255, 0, 255),
+                                          thickness=3,
+                                          lineType=cv2.LINE_4
+                                          )
+                            cv2.rectangle(img_color_srch,
+                                          (ROI3_x1, ROI3_y1),
+                                          (ROI3_x2, ROI3_y2),
+                                          (255, 0, 255),
+                                          thickness=3,
+                                          lineType=cv2.LINE_4
+                                          )
+                            cv2.rectangle(img_color_srch,
+                                          (ROI4_x1, ROI4_y1),
+                                          (ROI4_x2, ROI4_y2),
+                                          (255, 0, 255),
+                                          thickness=3,
+                                          lineType=cv2.LINE_4
+                                          )
+                            cv2.rectangle(img_color_srch,
+                                          (ROI5_x1, ROI5_y1),
+                                          (ROI5_x2, ROI5_y2),
+                                          (255, 0, 255),
+                                          thickness=3,
+                                          lineType=cv2.LINE_4
+                                          )
+                            cv2.rectangle(img_color_srch,
+                                          (ROI6_x1, ROI6_y1),
+                                          (ROI6_x2, ROI6_y2),
                                           (255, 0, 255),
                                           thickness=3,
                                           lineType=cv2.LINE_4
