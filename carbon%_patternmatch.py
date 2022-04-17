@@ -26,13 +26,37 @@ ittercount = 0
 rot = None
 paddedIm = None
 adjustlist = []
-hist_roi1 = []
-hist_roi2 = []
-hist_roi3 = []
-hist_roi4 = []
-hist_roi5 = []
-hist_roi6 = []
-img_show = True  # Show image
+hist_roi1_06 = []
+hist_roi2_06 = []
+hist_roi3_06 = []
+hist_roi4_06 = []
+hist_roi5_06 = []
+hist_roi6_06 = []
+hist_roi1_07 = []
+hist_roi2_07 = []
+hist_roi3_07 = []
+hist_roi4_07 = []
+hist_roi5_07 = []
+hist_roi6_07 = []
+hist_roi1_08 = []
+hist_roi2_08 = []
+hist_roi3_08 = []
+hist_roi4_08 = []
+hist_roi5_08 = []
+hist_roi6_08 = []
+hist_roi1_09 = []
+hist_roi2_09 = []
+hist_roi3_09 = []
+hist_roi4_09 = []
+hist_roi5_09 = []
+hist_roi6_09 = []
+hist_roi1_10 = []
+hist_roi2_10 = []
+hist_roi3_10 = []
+hist_roi4_10 = []
+hist_roi5_10 = []
+hist_roi6_10 = []
+img_show = False  # Show image
 write_file = False  # Write files with ROI
 dict_1 = {"roi1": [], 'roi2': [], 'roi3': [], 'roi4': [], 'roi5': [], 'roi6': []}
 ROI1_x1 = \
@@ -70,6 +94,39 @@ ROI4 = np.index_exp[775:806, 1176:1343]
 ROI5 = np.index_exp[768:808, 699:857]
 ROI6 = np.index_exp[456:676, 420:483]
 templateROI = np.index_exp[288:801, 345:1688]
+
+roilist = [ROI1, ROI2, ROI3, ROI4, ROI5, ROI6]
+histlist_06 = [hist_roi1_06,
+               hist_roi2_06,
+               hist_roi3_06,
+               hist_roi4_06,
+               hist_roi5_06,
+               hist_roi6_06,
+               hist_roi1_07,
+               hist_roi2_07,
+               hist_roi3_07,
+               hist_roi4_07,
+               hist_roi5_07,
+               hist_roi6_07,
+               hist_roi1_08,
+               hist_roi2_08,
+               hist_roi3_08,
+               hist_roi4_08,
+               hist_roi5_08,
+               hist_roi6_08,
+               hist_roi1_09,
+               hist_roi2_09,
+               hist_roi3_09,
+               hist_roi4_09,
+               hist_roi5_09,
+               hist_roi6_09,
+               hist_roi1_10,
+               hist_roi2_10,
+               hist_roi3_10,
+               hist_roi4_10,
+               hist_roi5_10,
+               hist_roi6_10
+               ]
 
 
 # Rotate Image
@@ -190,17 +247,75 @@ for i in listOfFiles:
                         loc_list = [i for i in zip(*loc)]
                         orginx = loc_list[0][1]
                         orginy = loc_list[0][0]
-                        if i.split('/')[0] == 'PMC 0.6':
+                        if i.split('/')[6] == 'PMC 0.6':
                             hist_ROI1 = cv2.calcHist([imgrotated_bw[ROI1]], [0], None, [255], [0, 255])
-                            hist_roi1.append(hist_ROI1)
-                        elif i.split('/')[0] == 'PMC 0.7':
-                            pass
-                        elif i.split('/')[0] == 'PMC 0.8':
-                            pass
-                        elif i.split('/')[0] == 'PMC 0.9':
-                            pass
-                        elif i.split('/')[0] == 'PMC 1.0':
-                            pass
+                            hist_ROI2 = cv2.calcHist([imgrotated_bw[ROI2]], [0], None, [255], [0, 255])
+                            hist_ROI3 = cv2.calcHist([imgrotated_bw[ROI3]], [0], None, [255], [0, 255])
+                            hist_ROI4 = cv2.calcHist([imgrotated_bw[ROI4]], [0], None, [255], [0, 255])
+                            hist_ROI5 = cv2.calcHist([imgrotated_bw[ROI5]], [0], None, [255], [0, 255])
+                            hist_ROI6 = cv2.calcHist([imgrotated_bw[ROI6]], [0], None, [255], [0, 255])
+                            hist_roi1_06 = + hist_ROI1
+                            hist_roi2_06 = + hist_ROI2
+                            hist_roi3_06 = + hist_ROI3
+                            hist_roi4_06 = + hist_ROI4
+                            hist_roi5_06 = + hist_ROI5
+                            hist_roi6_06 = + hist_ROI6
+
+                        elif i.split('/')[6] == 'PMC 0.7':
+                            hist_ROI1 = cv2.calcHist([imgrotated_bw[ROI1]], [0], None, [255], [0, 255])
+                            hist_ROI2 = cv2.calcHist([imgrotated_bw[ROI2]], [0], None, [255], [0, 255])
+                            hist_ROI3 = cv2.calcHist([imgrotated_bw[ROI3]], [0], None, [255], [0, 255])
+                            hist_ROI4 = cv2.calcHist([imgrotated_bw[ROI4]], [0], None, [255], [0, 255])
+                            hist_ROI5 = cv2.calcHist([imgrotated_bw[ROI5]], [0], None, [255], [0, 255])
+                            hist_ROI6 = cv2.calcHist([imgrotated_bw[ROI6]], [0], None, [255], [0, 255])
+                            hist_roi1_07 = + hist_ROI1
+                            hist_roi2_07 = + hist_ROI2
+                            hist_roi3_07 = + hist_ROI3
+                            hist_roi4_07 = + hist_ROI4
+                            hist_roi5_07 = + hist_ROI5
+                            hist_roi6_07 = + hist_ROI6
+
+                        elif i.split('/')[6] == 'PMC 0.8':
+                            hist_ROI1 = cv2.calcHist([imgrotated_bw[ROI1]], [0], None, [255], [0, 255])
+                            hist_ROI2 = cv2.calcHist([imgrotated_bw[ROI2]], [0], None, [255], [0, 255])
+                            hist_ROI3 = cv2.calcHist([imgrotated_bw[ROI3]], [0], None, [255], [0, 255])
+                            hist_ROI4 = cv2.calcHist([imgrotated_bw[ROI4]], [0], None, [255], [0, 255])
+                            hist_ROI5 = cv2.calcHist([imgrotated_bw[ROI5]], [0], None, [255], [0, 255])
+                            hist_ROI6 = cv2.calcHist([imgrotated_bw[ROI6]], [0], None, [255], [0, 255])
+                            hist_roi1_08 = + hist_ROI1
+                            hist_roi2_08 = + hist_ROI2
+                            hist_roi3_08 = + hist_ROI3
+                            hist_roi4_08 = + hist_ROI4
+                            hist_roi5_08 = + hist_ROI5
+                            hist_roi6_08 = + hist_ROI6
+
+                        elif i.split('/')[6] == 'PMC 0.9':
+                            hist_ROI1 = cv2.calcHist([imgrotated_bw[ROI1]], [0], None, [255], [0, 255])
+                            hist_ROI2 = cv2.calcHist([imgrotated_bw[ROI2]], [0], None, [255], [0, 255])
+                            hist_ROI3 = cv2.calcHist([imgrotated_bw[ROI3]], [0], None, [255], [0, 255])
+                            hist_ROI4 = cv2.calcHist([imgrotated_bw[ROI4]], [0], None, [255], [0, 255])
+                            hist_ROI5 = cv2.calcHist([imgrotated_bw[ROI5]], [0], None, [255], [0, 255])
+                            hist_ROI6 = cv2.calcHist([imgrotated_bw[ROI6]], [0], None, [255], [0, 255])
+                            hist_roi1_09 = + hist_ROI1
+                            hist_roi2_09 = + hist_ROI2
+                            hist_roi3_09 = + hist_ROI3
+                            hist_roi4_09 = + hist_ROI4
+                            hist_roi5_09 = + hist_ROI5
+                            hist_roi6_09 = + hist_ROI6
+
+                        elif i.split('/')[6] == 'PMC 1.0':
+                            hist_ROI1 = cv2.calcHist([imgrotated_bw[ROI1]], [0], None, [255], [0, 255])
+                            hist_ROI2 = cv2.calcHist([imgrotated_bw[ROI2]], [0], None, [255], [0, 255])
+                            hist_ROI3 = cv2.calcHist([imgrotated_bw[ROI3]], [0], None, [255], [0, 255])
+                            hist_ROI4 = cv2.calcHist([imgrotated_bw[ROI4]], [0], None, [255], [0, 255])
+                            hist_ROI5 = cv2.calcHist([imgrotated_bw[ROI5]], [0], None, [255], [0, 255])
+                            hist_ROI6 = cv2.calcHist([imgrotated_bw[ROI6]], [0], None, [255], [0, 255])
+                            hist_roi1_10 = + hist_ROI1
+                            hist_roi2_10 = + hist_ROI2
+                            hist_roi3_10 = + hist_ROI3
+                            hist_roi4_10 = + hist_ROI4
+                            hist_roi5_10 = + hist_ROI5
+                            hist_roi6_10 = + hist_ROI6
 
                         if img_show:
                             ROI1_x1, \
@@ -296,6 +411,53 @@ for i in listOfFiles:
     else:
         cv2.destroyAllWindows()
         break
+dict_1['roi1'].append(hist_roi1_06)
+dict_1['roi2'].append(hist_roi2_06)
+dict_1['roi3'].append(hist_roi3_06)
+dict_1['roi4'].append(hist_roi4_06)
+dict_1['roi5'].append(hist_roi5_06)
+dict_1['roi6'].append(hist_roi6_06)
 
-fig, axs = plt.subplots(ncols=2, nrows=2, figsize=(5.5, 3.5),
+dict_1['roi1'].append(hist_roi1_07)
+dict_1['roi2'].append(hist_roi2_07)
+dict_1['roi3'].append(hist_roi3_07)
+dict_1['roi4'].append(hist_roi4_07)
+dict_1['roi5'].append(hist_roi5_07)
+dict_1['roi6'].append(hist_roi6_07)
+
+dict_1['roi1'].append(hist_roi1_08)
+dict_1['roi2'].append(hist_roi2_08)
+dict_1['roi3'].append(hist_roi3_08)
+dict_1['roi4'].append(hist_roi4_08)
+dict_1['roi5'].append(hist_roi5_08)
+dict_1['roi6'].append(hist_roi6_08)
+
+dict_1['roi1'].append(hist_roi1_09)
+dict_1['roi2'].append(hist_roi2_09)
+dict_1['roi3'].append(hist_roi3_09)
+dict_1['roi4'].append(hist_roi4_09)
+dict_1['roi5'].append(hist_roi5_09)
+dict_1['roi6'].append(hist_roi6_09)
+
+dict_1['roi1'].append(hist_roi1_10)
+dict_1['roi2'].append(hist_roi2_10)
+dict_1['roi3'].append(hist_roi3_10)
+dict_1['roi4'].append(hist_roi4_10)
+dict_1['roi5'].append(hist_roi5_10)
+dict_1['roi6'].append(hist_roi6_10)
+
+fig, axs = plt.subplots(ncols=1, nrows=6, figsize=(10, 15),
                         constrained_layout=True)
+for ax in axs:
+    for i2 in dict_1['roi1']:
+        ax[1].plot(i2)
+    for i2 in dict_1['roi2']:
+        ax[2].plot(i2)
+    for i2 in dict_1['roi3']:
+        ax[3].plot(i2)
+    for i2 in dict_1['roi4']:
+        ax[4].plot(i2)
+    for i2 in dict_1['roi5']:
+        ax[5].plot(i2)
+    for i2 in dict_1['roi6']:
+        ax[6].plot(i2)
