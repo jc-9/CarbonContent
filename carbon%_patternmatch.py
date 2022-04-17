@@ -448,16 +448,21 @@ dict_1['roi6'].append(hist_roi6_10)
 
 fig, axs = plt.subplots(ncols=1, nrows=6, figsize=(10, 15),
                         constrained_layout=True)
-for ax in axs:
-    for i2 in dict_1['roi1']:
-        ax[1].plot(i2)
-    for i2 in dict_1['roi2']:
-        ax[2].plot(i2)
-    for i2 in dict_1['roi3']:
-        ax[3].plot(i2)
-    for i2 in dict_1['roi4']:
-        ax[4].plot(i2)
-    for i2 in dict_1['roi5']:
-        ax[5].plot(i2)
-    for i2 in dict_1['roi6']:
-        ax[6].plot(i2)
+for i2 in dict_1['roi1']:
+    axs[0].plot(i2)
+    axs[0].set_title('ROI1')
+for i2 in dict_1['roi2']:
+    axs[1].plot(i2)
+    axs[1].set_title('ROI2')
+for i2 in dict_1['roi3']:
+    axs[2].plot(i2)
+    axs[2].set_title('ROI3')
+for i2 in dict_1['roi4']:
+    axs[3].plot(i2)
+    axs[3].set_title('ROI4')
+for i2 in dict_1['roi5']:
+    axs[4].plot(i2)
+    axs[4].set_title('ROI5')
+for i2 in dict_1['roi6']:
+    axs[5].plot(i2)
+    axs[5].set_title('ROI6')
