@@ -59,6 +59,7 @@ hist_roi6_10 = []
 img_show = False  # Show image
 write_file = False  # Write files with ROI
 dict_1 = {"roi1": [], 'roi2': [], 'roi3': [], 'roi4': [], 'roi5': [], 'roi6': []}
+legend_list = ['0.6%', '0.7%', '0.8%', '0.9%', '1.0%']
 ROI1_x1 = \
     ROI1_y1 = \
     ROI1_x2 = \
@@ -448,21 +449,30 @@ dict_1['roi6'].append(hist_roi6_10)
 
 fig, axs = plt.subplots(ncols=1, nrows=6, figsize=(10, 15),
                         constrained_layout=True)
-for i2 in dict_1['roi1']:
-    axs[0].plot(i2)
+plt.subplots_adjust(hspace=0.5)
+
+for i2, i3 in list(zip(dict_1['roi1'], legend_list)):
+    axs[0].plot(i2, label=i3)
+    axs[0].legend(loc='upper right')
     axs[0].set_title('ROI1')
-for i2 in dict_1['roi2']:
-    axs[1].plot(i2)
+for i2, i3 in list(zip(dict_1['roi2'], legend_list)):
+    axs[1].plot(i2, label=i3)
+    axs[1].legend(loc='upper right')
     axs[1].set_title('ROI2')
-for i2 in dict_1['roi3']:
-    axs[2].plot(i2)
+for i2, i3 in list(zip(dict_1['roi3'], legend_list)):
+    axs[2].plot(i2, label=i3)
+    axs[2].legend(loc='upper right')
     axs[2].set_title('ROI3')
-for i2 in dict_1['roi4']:
-    axs[3].plot(i2)
+for i2, i3 in list(zip(dict_1['roi4'], legend_list)):
+    axs[3].plot(i2, label=i3)
+    axs[3].legend(loc='upper right')
     axs[3].set_title('ROI4')
-for i2 in dict_1['roi5']:
-    axs[4].plot(i2)
+for i2, i3 in list(zip(dict_1['roi5'], legend_list)):
+    axs[4].plot(i2, label=i3)
+    axs[4].legend(loc='upper right')
     axs[4].set_title('ROI5')
-for i2 in dict_1['roi6']:
-    axs[5].plot(i2)
+for i2, i3 in list(zip(dict_1['roi6'], legend_list)):
+    axs[5].plot(i2, label=i3)
+    axs[5].legend(loc='upper right')
     axs[5].set_title('ROI6')
+
