@@ -1,6 +1,5 @@
 """
 Justin Clay
-March 8 2022
 justinmelmarclay@gmail.com
 
 April 7, 2022- Image analysis to evaluate if the camera image is sensistve enough to detect changes in carbon %
